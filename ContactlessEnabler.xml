@@ -1,0 +1,2174 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Contactless Enabler Version : 92.00.01.06;
+     IDTECH KIOSK II  - Firmware Version EC8 GR 2.0.0 C54
+     IDTECH KIOSK III - Firmware Version Neo v1.20.109 -->
+<!-- XML Version: CE92.00.01.06-C54-v1.20.109-1A -->
+
+<!-- Ver.01 dated 23/12/2020 EN
+	All tags 9F1A Terminal Country Code changed from default values 840 United States and 124 Canada to 643 Russian Federation
+	All tags 5F2A Transaction Currency Code changed from default value 840 USD to 643 RUB
+	WidthSwitchTimer defined to recommended value 1400 	
+	EnablerDelayTimer defined to recommended value 4000 
+	AIDTagGroup Index = "10" (MIR)	
+		Tag DF55 Terminal TPM Capabilities changed from E800 to 8900 --> 
+<!-- Ver.02 dated 23/12/2020 EN
+	AIDTagGroup Index = "8" (MC)
+		Tag DF8124 Reader Contactless Transaction Limit for readers that do not support On-Device CVM changed from 30000 to 200000
+		Tag 9F1D PayPass Terminal Risk Management Data changed from 4040000000000000 to 4040800000000000
+	AIDTagGroup Index = "2" (VISA)
+		Tag 9F66 Visa TTQs Mag. stripe & EMV Supported changed from B6804000 to 36804000
+	AIDTagGroup Index = "9" (Maestro and Cirrus)
+		Tag DF8124 Reader Contactless Transaction Limit for readers that do not support On-Device CVM changed from 30000 to 200000
+	AIDTagGroup Index = "4" (INTERAC, CUP and STAR) 
+		Tag FFFF Terminal Action Code (Denial) changed from 0000000000 to 0010000000
+	AIDTagGroup Index = "10" (MIR)
+		Tag FF01 Terminal Action Code (Denial)changed from 0000000000 to 0010000000
+		Tag DF53 Contactless Limit (Non CD-CVM)changed from 30000 to 20000000
+		Tag FF04 Data Exchange Tag List disabled\commented
+		Tag DF74 Kernel Verification Results (KVR) added
+		Tag 84 Dedicated File (DF) Name added
+	SuppressEMVDataOnMSD changed from 0 to 1 -->
+<!-- Ver.03 dated 26/05/2021 EN
+	Uncommented  <DeviceVariant Name = "Kiosk3_20.109"> in the beginning and end of the section DeviceVariant for MIR-->
+<!-- Ver.04 dated 06/07/2021 EN
+	AIDTagGroup Index = "10" (MIR)
+		Tag 9F35 Terminal Type added
+	For sending 9F06 value equal to known 84 in case with MIR added setting UseDFName for both AIDs in top part of XML(whole section with comments))
+		<DeviceVariant Name = "Kiosk3_20.109">
+		<AID Value = "A00000065810" kernelID="00" AIDTagGroup = "10" transType = "01">
+		<TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt>
+		<AID Value = "A00000065820" kernelID="00" AIDTagGroup = "10" transType = "01">
+		<TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt> --> 
+<!-- Ver.04a dated 08/07/2021 EN
+	Special for Belarus
+	All tags 9F1A Terminal Country Code changed from values 643 Russian Federation to 112 Belarus
+	All tags 5F2A Transaction Currency Code changed from value 643 RUB to 933 BYN --> 
+
+<!-- PLEASE ONLY CHANGED THE ENTRIES MARKED AS EDITABLE -->
+<!-- Changing other tags may put the reader into a bad state -->
+<!-- The only known recover method is to reload the device's firmware -->
+<CONTACTLESSCONFIG xmlns="http://www.ncr.com/APTRA/ContactlessConfig" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:noNamespaceSchemaLocation="ContactlessEnabler.xsd" 
+                   Filename="ContactlessEnabler.xml">
+
+  <!-- This section allows an application to define reader specific proprietary tags -->
+  <!-- The value for each of these proprietary tags must be provided in the DefaultTerminalTags section or AIDTagGroup section -->
+  <ReaderProprietaryTags>
+    <DeviceVariant Name = "Wincor Nixdorf">
+      <Tag Name = "DF8223" Length = "1" Format = "Binary"  MaskExpression = "b1"  Description = "Offline Cash Check"></Tag>
+      <Tag Name = "DFEE35" Length = "3" Format = "Binary"  MaskExpression = "b"   Source = "Terminal" Description = "Reader Risk Flags"></Tag>
+      <Tag Name = "DF60"   Length = "6" Format = "Numeric" MaskExpression = "n12" Description = "Reader Contactless Transaction Limit"></Tag>
+      <Tag Name = "DF61"   Length = "6" Format = "Numeric" MaskExpression = "n12" Description = "CVM Required Limit"></Tag>
+      <Tag Name = "DF71"   Length = "1" Format = "Binary"  MaskExpression = "b1"  Description = "Zero Amount Online Flag"></Tag>
+      <Tag Name = "DF59"   Length = "5" Format = "Binary"  MaskExpression = "b5"  Description = "TAC Denial"></Tag>
+      <Tag Name = "DF5A"   Length = "5" Format = "Binary"  MaskExpression = "b5"  Description = "TAC Online"></Tag>
+      <Tag Name = "DF58"   Length = "5" Format = "Binary"  MaskExpression = "b5"  Description = "TAC Default"></Tag>
+      <Tag Name = "DFA101" Length = ""  Format = "Binary"  MaskExpression = "b"   Description = "CVM Capability Byte - No CVM Required"></Tag>
+      <Tag Name = "DF813B" Length = "1" Format = "Binary"  MaskExpression = "b1"  Description = "C2 Kernel Configuration"></Tag>
+      <Tag Name = "DF67"   Length = ""  Format = "Binary"  MaskExpression = "b"   Description = "EMV Result Tag List"></Tag>
+    </DeviceVariant>
+
+   <!-- A few important IDTech proprietary tags for a Diebold IDTech Kiosk III reader -->
+    <DeviceVariant Name = "Kiosk3_20.109">
+      <Tag Name = "DF7F"   Length = "1" Format = "Binary" MaskExpression = "b1"   Description = "IDTech Improved Collision Detection"></Tag>
+      <Tag Name = "FFF3"   Length = "2" Format = "Binary" MaskExpression = "b2"   Description = "IDTech Application Capability"></Tag>
+      <Tag Name = "FFF8"   Length = "1" Format = "Binary" MaskExpression = "b1"   Description = "IDTech UI Scheme"></Tag>
+      <Tag Name = "DFED11" Length = "1" Format = "Binary" MaskExpression = "b1"   Description = "IDTech 2/3 byte tag configuration"></Tag>
+      <Tag Name = "DFEF34" Length = "1" Format = "Binary" MaskExpression = "b1"   Description = "IDTech Antenna Detection "></Tag>
+      <Tag Name = "DFED48" Length = "1" Format = "Binary" MaskExpression = "b1"   Description = "IDTech US Common AID Filter"></Tag>
+      <Tag Name = "FFF4"   Length = "3" Format = "Binary" MaskExpression = "b3"   Description = "IDTech VISA Risk Flag"></Tag>
+      <Tag Name = "FFF1"   Length = "6" Format = "Numeric" MaskExpression = "n12" Description = "IDTech Contactless Transaction Limit"></Tag>
+      <Tag Name = "FFF5"   Length = "6" Format = "Numeric" MaskExpression = "n12" Description = "IDTech CVM Required Limit"></Tag>
+      <Tag Name = "FFFD"   Length = "5" Format = "Binary" MaskExpression = "b5"   Description = "IDTech TAC Online"></Tag>
+      <Tag Name = "FFFE"   Length = "5" Format = "Binary" MaskExpression = "b5"   Description = "IDTech TAC Default"></Tag>
+      <Tag Name = "FFFF"   Length = "5" Format = "Binary" MaskExpression = "b5"   Description = "IDTech TAC Denial"></Tag>
+      <Tag Name = "E1"     Length = ""  Format = "Binary" MaskExpression = "b"    Description = "IDTech Clearing Record"></Tag>
+    </DeviceVariant>
+
+  </ReaderProprietaryTags>
+
+  <DefaultTerminalTags>
+    <!-- A list of ALL the generic terminal tags and values-->
+    <!-- The DefaultTerminalTags section is optional       -->
+
+    <!-- UPDATE MAY ALSO BE REQUIRED TO THE MasterCard AIDTagGroup -->
+    <!-- From IDTech Firmware Kiosk II GR 2.0 and now with Kiosk III, the objects in -->
+    <!-- this section are NOT used by MASTERCARD applications.  The MasterCard       -->
+    <!-- AIDTagGroup further down repeats some of these tags.  When changing any of  -->
+    <!-- the values below, please also check and update the MasterCard AIDTagGroup   -->
+
+    <!-- CHANGE FOR v1.20 FIRMWARE - AIDTAGGROUP Updates also required               -->
+    <!-- With the introduction of Kiosk 3 v1.20 firmware the other payment system    -->
+    <!-- kernels (Interac, Amex, VISA ) also no longer use this section.             -->
+    <!-- The tags below are also repeated in the AIDTagGroup(s) further down and     -->
+    <!-- should be updated in all paces.                                             -->
+
+
+    <!-- Merchant Information Tags - Configure as Required -->
+    <!-- Merchant Name Format Requirements - See User Guide for full guidelines     -->
+    <!--    - Should start "ATM", then name and location of provider logs           -->
+    <!--    - Cardholder friendly information should be in the first 20 characters  -->
+    <!--    - Ensure that value entered here is of fixed length of 30 characters,   -->
+    <!--      spaces can be added if value is lesser than 30 characters. This is    -->
+    <!--      an IDTech GR 2.0 firmware restriction                                 -->
+    <Tag Name = "9F4E">"ATM, NCR Lab, NCR Office      "</Tag> <!-- Merchant Name and Location -->
+    <Tag Name = "9F1C">"NCRATM01"</Tag>    <!-- Terminal Identification -->
+
+    <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+
+    <!-- Terminal Properties tags - Configure as required -->
+    <!-- When editing ensure the format of the tag data is correct -->
+    <!-- Incorrect values may put the reader into a bad state which will require a firmware reload -->
+    <Tag Name = "9F1A">0112</Tag>    <!-- Terminal Country Code - Belarus - Edit as required -->
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <Tag Name = "9F35">14</Tag>            <!-- Terminal Type is an ATM -->
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+
+    <DeviceVariant Name = "Wincor Nixdorf">
+        <Tag Name = "DF8130">0D</Tag>     <!-- Hold Time Value -->
+        <Tag Name = "9F09">0002</Tag>     <!-- Application Version Number (PayPass M/Chip)-->
+        <Tag Name = "9F66">B6804000</Tag> <!-- Visa TTQs Mag. stripe & EMV Supported -->
+        <Tag Name = "DF67">57005A005F20005F24005F2A005F340082009A009C009F02009F03009F10009F1A009F26009F27009F34009F36009F37009F5B009F5D009F6E009F7C009F3900DF812D009F21009F4C008A009B009500DF69009F1E009F16009F33004F009F66008400DF812900DF814B00DF814400710072009100DF810C00DF812700DF811700DF811F009F35009F41009F53009F240050009F12009F09009F11009F5300</Tag>
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk2">
+        <Tag Name = "5F2A">0933</Tag>        <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "9F33">604000</Tag>      <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+        <Tag Name = "9F53">Z</Tag>           <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>    <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag><!-- Amount, Other (Numeric) for cashback should be 0 -->
+        <Tag Name = "DF51">80</Tag>          <!-- ExpressPay Terminal Capabilities -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk3">
+        <Tag Name = "5F2A">0933</Tag>        <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "9F33">604000</Tag>      <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+        <Tag Name = "9F53">Z</Tag>           <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>    <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag><!-- Amount, Other (Numeric) for cashback should be 0 -->
+        <Tag Name = "DF51">80</Tag>          <!-- ExpressPay Terminal Capabilities -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk3_20.109">
+        <Tag Name = "5F2A">0933</Tag>        <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "9F33">604000</Tag>      <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+        <Tag Name = "9F53">Z</Tag>           <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>    <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag><!-- Amount, Other (Numeric) for cashback should be 0 -->
+        <Tag Name = "DF51">80</Tag>          <!-- ExpressPay Terminal Capabilities -->
+    </DeviceVariant>
+
+    <!-- IDTech Device Specific Behaviour Tags - Collision Detection                -->
+    <!--    Improved Collision Detection is currently Enabled                       -->
+    <!--    This can be disabled but will negatively affect detection of collisions -->
+    <!--    00 is disabled, collision detection will not be performed, but quickest -->
+    <!--    01 to 07 Enables collision detection but will impact transaction times  -->
+    <!--    01 is the current setting which satisfies the performance parts and     -->
+    <!--    collision detection tests of VISA Europe's VpTT tests.                  -->
+    <!--    customer testing shows that some collisions may not be detected with    -->
+    <!--    a value of 1 or 2                                                       -->
+    <!--    04 is the recommended value - best compromise between detecting         -->
+    <!--    collisions and its impact on transaction times                          -->
+    <!--    See User Guide for likely impacts of this settings                      -->
+
+    <Tag Name = "DF7F">02</Tag>     <!-- Improved Collision Detection - Enabled -->
+
+    <!-- The below setting is used to Disable Collision Detection -->
+    <!--<Tag Name = "DF7F">00</Tag> -->    <!-- Improved Collision Detection - Disabled -->
+
+    <Tag Name = "DF78">01</Tag> <!-- Optimized EEPROM read/write (00 = Disabled / 01 = Enabled) -->
+
+    <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+    <Tag Name = "DF63">00</Tag>     <!-- Anti-collision or Collision Detection-->
+    <Tag Name = "DF64">00</Tag>     <!-- Enable/Disable Visa Wave cards-->
+    <Tag Name = "DF65">00</Tag>     <!-- Heartbeat Idle-->
+    <Tag Name = "DF66">00</Tag>     <!-- Unsupported Card Message - Display a "Fail" message-->
+    <Tag Name = "DF7C">00</Tag>     <!-- Auto-Switch - Disabled-->
+    <Tag Name = "DF7D">00</Tag>     <!-- Track Data Format - No start/end sentinels or LRC-->
+    <Tag Name = "FFF0">0E0000</Tag> <!-- Specific Feature Switch - Enable VCPS 2.1.1/2.1.2 CVN17 -->
+    <Tag Name = "FFF7">02</Tag>     <!-- Enable/Disable Burst Mode - Burst Mode Auto shut-off -->
+    <Tag Name = "FFF8">03</Tag>     <!-- UI Scheme - DO NOT CHANGE -->
+
+    <!-- Application Capability - enables/disables each kernel -->
+    <Tag Name = "FFF3">CFFF</Tag>
+
+    <!-- Antenna Disconnection Detection control -->
+    <DeviceVariant Name = "Kiosk3">
+        <Tag Name = "DFEF34">00</Tag>  <!-- Antenna Detection control - 00 = Disabled -->
+    </DeviceVariant>
+    
+    <DeviceVariant Name = "Kiosk3_10.140">
+        <Tag Name = "DFEF34">01</Tag>  <!-- Antenna Detection control - 01 = Enabled -->
+        <Tag Name = "DFED38">60</Tag>  <!-- Antenna Detection Timer - Unit in Seconds -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk3_131"> <!-- Applicable for all Kiosk III readers with firmwares Neo #131 and above -->
+        <Tag Name = "DFED11">01</Tag>   <!-- IDTech specific 2/3 bytes tag configurations -->
+        <Tag Name = "DFEF34">00</Tag>   <!-- IDTech specific - Enables Antenna Detection -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk3_20.109"> <!-- Applicable for all Kiosk III readers with firmware Neo #109 or above -->
+        <Tag Name = "DFED11">01</Tag>      <!-- IDTech specific 2/3 bytes tag configurations -->
+        <Tag Name = "DFEF34">00</Tag>      <!-- IDTech specific - Enables Antenna Detection -->
+    </DeviceVariant>
+    
+    <!-- Interac Tags -->
+    <!-- These are only required to be un-commented if the firmware being used  -->
+    <!-- is before either C54 for Kiosk 2 or before 01.01.122 for Kiosk 3".     -->
+    <!-- See AID tap Group 4 for the values used by the current firmware        -->
+    <!--<Tag Name = "9F58">01</Tag>-->           <!-- Merchant Type Indicator -->
+    <!--<Tag Name = "9F5E">E000</Tag>-->         <!-- Terminal Option Status -->
+    <!--<Tag Name = "9F5F">000000000000</Tag>--> <!-- Terminal(Reader) Contactless Floor Limit -->
+    <!--<Tag Name = "9F5A">00</Tag>-->           <!-- Terminal Transaction Type -->
+    <!--<Tag Name = "9F59">C4C700</Tag>-->       <!-- Terminal Transaction Information -->
+    
+    <!--Enable and Disable US Common Debit AID Filtering-->
+    <DeviceVariant Name = "Kiosk3_20.109"> 
+       <Tag Name = "DFED48">0F</Tag>
+    </DeviceVariant> 
+
+  </DefaultTerminalTags>
+
+  <!--  Acceptable Applications and their associated AID Tag Groups -->
+  <!--  This is a complete set supported by the reader -->
+  <!--  TO CONFIGURE ACCEPTABLE AIDS, COMMENT ANY ENTRIES WHICH ARE NOT TO BE SUPPORTED -->
+
+  <!-- MasterCard Credit/Debit -->
+  <AID Value = "A0000000041010" kernelID="02" AIDTagGroup = "1" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+  </AID>
+
+  <DeviceVariant Name = "Wincor Nixdorf">
+    <AID Value = "A0000000041010" kernelID="02" AIDTagGroup = "1" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+    <AID Value = "A0000000041010" kernelID="02" AIDTagGroup = "1" transType = "00">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000041010" kernelID="02" AIDTagGroup = "1" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020001029301020101</Tag>
+    </AID>
+  </DeviceVariant>
+  
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000000041010" kernelID="02" AIDTagGroup = "8" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020008029308020108</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- MasterCard Maestro -->
+  <AID Value = "A0000000043060" kernelID="02" AIDTagGroup = "3" transType = "93">
+      <Tag Name="FFE8">02</Tag>
+  </AID>
+
+  <DeviceVariant Name = "Wincor Nixdorf">
+    <AID Value = "A0000000043060" kernelID="02" AIDTagGroup = "3" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+    <AID Value = "A0000000043060" kernelID="02" AIDTagGroup = "3" transType = "00">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000043060" kernelID="02" AIDTagGroup = "3" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020003029303020103</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000000043060" kernelID="02" AIDTagGroup = "9"  transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020009029309020109</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- MasterCard Cirrus  -->
+  <AID Value = "A0000000046000" kernelID="02" AIDTagGroup = "3" SystemAID = "false" transType = "93">
+      <Tag Name="FFE8">02</Tag>
+  </AID>
+
+  <DeviceVariant Name = "Wincor Nixdorf">
+    <AID Value = "A0000000046000" kernelID="02" AIDTagGroup = "3" SystemAID = "false" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+    <AID Value = "A0000000046000" kernelID="02" AIDTagGroup = "3" SystemAID = "false" transType = "00">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000046000" kernelID="02" AIDTagGroup = "3" SystemAID = "false" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020003029303020103</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For all Kiosk III Neo v1.10.113 and above -->
+  <DeviceVariant Name = "Kiosk3_113">
+    <AID Value = "A0000000046000" kernelID="02" AIDTagGroup = "3" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020003029303020103</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109"> 
+    <AID Value = "A0000000046000" kernelID="02" AIDTagGroup = "9" transType = "93">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020009029309020109</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- VISA Credit Debit -->
+  <AID Value = "A0000000031010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+  </AID>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000031010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000000031010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- VISA Electron -->
+  <AID Value = "A0000000032010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+  </AID>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000032010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+  
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000000032010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- VISA Interlink -->
+  <AID Value = "A0000000033010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+  </AID>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000033010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+  
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000000033010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- VISA Plus -->
+  <AID Value = "A0000000038010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+  </AID>
+
+  <!-- For all Kiosk III readers -->
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000000038010" kernelID="03" AIDTagGroup = "2" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+        <Tag Name="FFE3">74</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- American Express -->
+  <AID Value = "A00000002501" kernelID="04" AIDTagGroup = "6" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+  </AID>
+
+  <!-- For  Kiosk III -->
+  <DeviceVariant Name = "Kiosk3">  
+    <AID Value = "A00000002501" kernelID="04" AIDTagGroup = "6" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">040006049306040106</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109"> 
+    <AID Value = "A00000002501" kernelID="04" AIDTagGroup = "16" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">040010049310040110</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseXMLAIDName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- JCB J/Speedy -->
+  <DeviceVariant Name = "Kiosk2">    
+    <AID Value = "A0000000651010" kernelID="01" AIDTagGroup = "7" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <DeviceVariant Name = "Kiosk3">    
+    <AID Value = "A0000000651010" kernelID="01" AIDTagGroup = "7" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">010007019307010107</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- Discover -->
+  <DeviceVariant Name = "Kiosk2">
+    <AID Value = "A0000003241010" kernelID="06" AIDTagGroup = "5" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000003241010" kernelID="06" AIDTagGroup = "5" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">060005069305060105</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- Discover D-PAS -->
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000001523010" kernelID="06" AIDTagGroup = "20" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">060014060114</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt>
+    </AID>
+  </DeviceVariant>
+
+  <!-- MIR -->
+  <!-- MIR Recommended Firmware: v1.20.118 and above -->
+  <!-- For  Kiosk III Neo v1.20.109 & above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+      <AID Value = "A00000065810" kernelID="00" AIDTagGroup = "10" transType = "01">
+          <Tag Name="FFE8">02</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt>
+       </AID>
+       
+       <AID Value = "A00000065820" kernelID="00" AIDTagGroup = "10" transType = "01">
+          <Tag Name="FFE8">02</Tag>
+
+        <!-- TerminalAIDForReceipt element defines the TerminalAID returned in   -->
+        <!-- Tag 9F06 and AppInfo structure                                      -->
+        <!-- "UseReaderDefault" - will return the same value the reader returns  -->
+        <!-- "UseXMLAIDName"    - will return the AID Name as defined in the XML -->
+        <!-- "UseDFName"        - will return the DF Name tag value              -->
+        <TerminalAIDForReceipt>UseDFName</TerminalAIDForReceipt>
+      </AID>
+  </DeviceVariant>
+  
+  
+  <!-- Star -->
+  <DeviceVariant Name = "Kiosk2">
+    <AID Value = "A0000004170101" kernelID="00" AIDTagGroup = "4" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000004170101" kernelID="00" AIDTagGroup = "4" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">000004009304000104</Tag>
+    </AID>
+  </DeviceVariant>
+
+
+  <!-- INTERAC -->
+  <DeviceVariant Name = "Kiosk2">
+    <AID Value = "A0000002771010" kernelID="00" AIDTagGroup = "4" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <DeviceVariant Name = "Kiosk3">
+    <AID Value = "A0000002771010" kernelID="00" AIDTagGroup = "4" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">000004009304000104</Tag>
+    </AID>
+  </DeviceVariant>
+
+  <!-- For  Kiosk III Neo v1.20.109 or above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000002771010" kernelID="00" AIDTagGroup = "24" transType = "01">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">000018009318000118</Tag>
+    </AID>
+  </DeviceVariant>
+
+
+  <!--  Union Pay International (UPI or CUP) AIDs are supported by Kiosk-III -->
+  <!--  firmware version 1.10.098 and above.                                 -->
+  <!--  The Enabler will not send them to a Kiosk II device or Kiosk III     -->
+  <!--  with firmware older than 1.10.098                                    -->
+  <DeviceVariant Name = "Kiosk3">
+    <!-- CUP Debit -->
+    <AID Value = "A000000333010101" kernelID="07" AIDTagGroup = "4">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">070004079304070104</Tag>
+    </AID>
+
+    <!-- CUP Credit-->
+    <AID Value = "A000000333010102" kernelID="07" AIDTagGroup = "4">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">070004079304070104</Tag>
+    </AID>
+
+    <!-- CUP Semi Credit-->
+    <AID Value = "A000000333010103" kernelID="07" AIDTagGroup = "4">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">070004079304070104</Tag>
+    </AID>
+
+    <!-- CUP Electronic Cash-->
+    <AID Value = "A000000333010106" kernelID="07" AIDTagGroup = "4">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">070004079304070104</Tag>
+    </AID>
+  </DeviceVariant>
+
+  
+  <!-- US COMMON AID DEFINITIONS are listed here -->
+  <!-- By default US Common Aids commented out in the xml and they should uncommented for US Region-->
+  
+  <!--<AID Value = "A0000000042203" kernelID="02" AIDTagGroup = "1" SystemAID = "false" transType = "93"></AID> --><!--MasterCard Maestro US Debit-->
+  <!--<AID Value = "A0000000980840" kernelID="03" AIDTagGroup = "2" SystemAID = "false" transType = "01"></AID> --><!--VISA US Debit-->
+  <!--<AID Value = "A0000001524010" kernelID="06" AIDTagGroup = "5" SystemAID = "false" transType = "01"></AID> --><!--Discover US Debit-->
+  <!--<AID Value = "A000000333010108" kernelID="07" AIDTagGroup = "4" SystemAID = "false" transType = "01"></AID>--> <!--China Union Pay-->
+  
+  <!-- <DeviceVariant Name = "Kiosk3_20.109">
+    <AID Value = "A0000000042203" kernelID="02" AIDTagGroup = "9">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">020009029309020109</Tag>
+    </AID>
+    <AID Value = "A0000000980840" kernelID="03" AIDTagGroup = "2">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">030002039302030102</Tag>
+    </AID>
+    <AID Value = "A0000001524010" kernelID="06" AIDTagGroup = "20" >
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">060014060114</Tag>
+    </AID>
+    <AID Value = "A000000333010108" kernelID="07" AIDTagGroup = "4">
+        <Tag Name="FFE8">02</Tag>
+        <Tag Name="FFE9">070004079304070104</Tag>
+    </AID>
+  </DeviceVariant>-->
+  <!--US Common AID filter Setting - These AIDS will have priority-->
+  <!--<USCommonAIDFilterList>
+    <AID Value = "A0000000980840"></AID>
+    <AID Value = "A0000000042203"></AID>
+    <AID Value = "A0000001524010"></AID>
+  </USCommonAIDFilterList>-->
+
+  <!-- An example to configure DOMESTIC AID -->
+  <!-- <AID Value = "A0000002281010" kernelID = "01" AIDTagGroup = "1" SystemAID = "false"> </AID> -->
+
+
+  <!--  TAG Groups - PLEASE DO NOT REMOVE ANY OF THESE GROUP ENTRIES -->
+  <!--  Removing the non-support AIDS from the above section is all  -->
+  <!--  that is required. An unreferenced tag group will not be used -->
+
+  <!--  MasterCard Tag Group - Kiosk 2 & Kiosk III v1.10 -->
+  <AIDTagGroup Index = "1">
+
+    <!-- For Kiosk 2 & Kioks 3 v1.10.XX, the following Terminal related data objects -->
+    <!-- SHOULD be updated here. The DefaultTerminalTags are not use for MasterCard  -->
+    <!-- Cards. When editing ensure the format is correct. Incorrect values may put  -->
+    <!-- the reader into a bad state which will require a firmware reload            -->
+    
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <Tag Name = "9F35">14</Tag>            <!-- Terminal Type is an ATM -->
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+
+    <DeviceVariant Name = "Wincor Nixdorf">
+       <Tag Name = "DF813B">10</Tag>         <!-- C2 Kernel Configuration -->
+       <Tag Name = "DF60">000000030000</Tag> <!-- Reader Contactless Transaction Limit -->
+       <Tag Name = "DF61">000000000000</Tag> <!-- CVM Required Limit -->
+       <Tag Name = "DF59">0000800000</Tag>   <!-- TAC Denial -->
+       <Tag Name = "DF5A">F45004800C</Tag>   <!-- TAC Online -->
+       <Tag Name = "DF58">F45004800C</Tag>   <!-- TAC Default -->
+       <Tag Name = "DFA101">40</Tag>         <!-- CVM Capability Byte - No CVM Required -->
+       <Tag Name = "DF811E">20</Tag>         <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+       <Tag Name = "DF812C">20</Tag>         <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+       <Tag Name = "9F1D">4040000000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+       <Tag Name = "9F33">604008</Tag>           <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN, CDA -->
+       <!-- <Tag Name = "9F33">604000</Tag> -->  <!-- NO CDA - This setting should be used when CDA is Disabled -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk2">
+        <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+        <Tag Name = "9F1C">"NCRATM01"</Tag>    <!-- Terminal Identification -->
+        <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+        <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "DF8124">30000</Tag>       <!-- Reader Contactless Transaction Limit for readers that do not support On-Device CVM - Edit as required -->
+        <Tag Name = "DF8126">0</Tag>           <!-- Cardholder Verification Method (CVM) Required Limit for PayPass -->
+
+        <Tag Name = "9F33">604000</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+        <!--<Tag Name = "9F33">604008</Tag>--> <!-- This setting should be used when CDA is enabled-->
+
+        <Tag Name = "9F53">Z</Tag>             <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+        <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+        <Tag Name = "FFF8">03</Tag>      <!-- UI Scheme - DO NOT CHANGE -->
+
+        <!-- DO NOT CHANGE -->
+        <Tag Name = "FFFC">00</Tag>           <!-- PayPass Profile - MSD and EMV-->
+        <Tag Name = "DF28">604000</Tag>       <!-- Terminal Capabilities - No CVM Requirement (M/Chip v2.0)-->
+        <!--<Tag Name = "DF28">604008</Tag>--><!-- This setting should be used when CDA is enabled-->
+        <Tag Name = "DF29">604000</Tag>       <!-- Terminal Capabilities - CVM Requirement (M/Chip v2.0)-->
+        <!--<Tag Name = "DF29">604008</Tag>--><!-- This setting should be used when CDA is enabled-->
+        <Tag Name = "DF811E">20</Tag>         <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+        <Tag Name = "DF812C">20</Tag>         <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+        <Tag Name = "FF69">9F1D084040000000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+
+        <!--- Payment system's recommended value - EDIT ONLY IF REQUIRED -->
+        <Tag Name = "9F09">0002</Tag>  <!-- Application Version Number (PayPass M/Chip)-->
+        <Tag Name = "9F6D">0001</Tag>  <!-- Application Version Number (AVN) - PayPass Magstripe-->
+
+        <!-- Transaction Type used when not defined in transaction identifier section -->
+        <Tag Name = "9C">93</Tag>      <!-- Transaction Type - MasterCard's Idle tap value -->
+
+        <!-- PayPass Terminal Action Codes   -->
+        <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+        <Tag Name = "DF8122">F45004800C</Tag>  <!-- C2Terminal Action Code (Online)-->
+        <Tag Name = "DF8120">F45004800C</Tag>  <!-- C2Terminal Action Code (Default)-->
+        <!-- Payment systems recommended value - EDIT IF REQUIRED -->
+        <Tag Name = "DF8121">0000800000</Tag>  <!-- C2Terminal Action Code (Denial)-->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk3">
+        <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+        <Tag Name = "9F1C">"NCRATM01"</Tag>    <!-- Terminal Identification -->
+        <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+        <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "DF8124">30000</Tag>       <!-- Reader Contactless Transaction Limit for readers that do not support On-Device CVM - Edit as required -->
+        <Tag Name = "DF8126">0</Tag>           <!-- Cardholder Verification Method (CVM) Required Limit for PayPass -->
+
+        <Tag Name = "9F33">604000</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+        <!--<Tag Name = "9F33">604008</Tag>--> <!-- This setting should be used when CDA is enabled-->
+
+        <Tag Name = "9F53">Z</Tag>             <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+        <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+        <Tag Name = "FFF8">03</Tag>      <!-- UI Scheme - DO NOT CHANGE -->
+
+        <!-- DO NOT CHANGE -->
+        <Tag Name = "FFFC">00</Tag>            <!-- PayPass Profile - MSD and EMV-->
+        <Tag Name = "DF28">604000</Tag>        <!-- Terminal Capabilities - No CVM Requirement (M/Chip v2.0)-->
+        <!--<Tag Name = "DF28">604008</Tag>--> <!-- This setting should be used when CDA is enabled-->
+        <Tag Name = "DF29">604000</Tag>        <!-- Terminal Capabilities - CVM Requirement (M/Chip v2.0)-->
+        <!--<Tag Name = "DF29">604008</Tag>--> <!-- This setting should be used when CDA is enabled-->
+        <Tag Name = "DF811E">20</Tag>          <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+        <Tag Name = "DF812C">20</Tag>          <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+        <Tag Name = "FF69">9F1D084040000000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+
+        <!--- Payment system's recommended value - EDIT ONLY IF REQUIRED -->
+        <Tag Name = "9F09">0002</Tag>  <!-- Application Version Number (PayPass M/Chip)-->
+        <Tag Name = "9F6D">0001</Tag>  <!-- Application Version Number (AVN) - PayPass Magstripe-->
+
+        <!-- Transaction Type used when not defined in transaction identifier section -->
+        <Tag Name = "9C">93</Tag>      <!-- Transaction Type - MasterCard's Idle tap value -->
+
+        <!-- PayPass Terminal Action Codes -->
+        <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+        <Tag Name = "DF8122">F45004800C</Tag>  <!-- C2Terminal Action Code (Online)-->
+        <Tag Name = "DF8120">F45004800C</Tag>  <!-- C2Terminal Action Code (Default)-->
+        <!-- Payment systems recommended value - EDIT IF REQUIRED -->
+        <Tag Name = "DF8121">0000800000</Tag>  <!-- C2Terminal Action Code (Denial)-->
+    </DeviceVariant>
+
+    <!-- A list of the tags which will be included in EMV Blob  -->
+    <!-- This list is based on the "M/Chip Requirements - For   -->
+    <!-- Contact and Contactless" dated 17 November 2019        -->
+    <!-- Additional tags to be returned in the EMV blob can be  -->
+    <!-- added here                                             -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "true">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F53"></Tag> <!-- Transaction Category Code -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->  
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <!--<Tag Name = "9F6E"></Tag> <!-- 3rd Party Data - Form Factor Indicator -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+
+
+  <!--  MasterCard Tag Group for Kiosk 3 v1.20  -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AIDTagGroup Index = "8">
+
+    <!-- For Kiosk 3 v1.20, the following Terminal related data objects SHOULD be -->
+    <!-- updated here. The DefaultTerminalTags are not use for MasterCard Cards   -->
+    <!-- When editing ensure the format is correct. Incorrect values may put the  -->
+    <!-- reader into a bad state which will require a firmware reload             -->
+
+    <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+    <Tag Name = "9F1C">"NCRATM01"</Tag>    <!-- Terminal Identification -->
+
+    <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+    <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+    <Tag Name = "DF8124">200000</Tag>       <!-- Reader Contactless Transaction Limit for readers that do not support On-Device CVM - Edit as required -->
+    <Tag Name = "DF8126">0</Tag>           <!-- Cardholder Verification Method (CVM) Required Limit for PayPass -->
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <Tag Name = "9F35">14</Tag>            <!-- Terminal Type is an ATM -->
+    <Tag Name = "9F33">604008</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN, CDA -->
+    <!--<Tag Name = "9F33">604000</Tag>--> <!-- NO CDA - This setting should be used when CDA is Disabled-->    
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+    <Tag Name = "9F53">Z</Tag>             <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+    <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+    <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+    <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+    <Tag Name = "FFF8">03</Tag>      <!-- UI Scheme - DO NOT CHANGE -->
+
+    <!-- DO NOT CHANGE -->
+    <Tag Name = "DF811B">10</Tag>    <!-- Kernel Configuration- EMV, MSD and RRP supported-->
+    <Tag Name = "DF811E">20</Tag>    <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+    <Tag Name = "DF812C">20</Tag>    <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+    <Tag Name = "FF69">9F1D084040000000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+    <Tag Name = "9F1D">4040800000000000</Tag>       <!-- PayPass Terminal Risk Management Data -->
+
+     <!--- Payment system's recommended value - EDIT ONLY IF REQUIRED -->
+    <Tag Name = "9F09">0002</Tag>  <!-- Application Version Number (PayPass M/Chip)-->
+    <Tag Name = "9F6D">0001</Tag>  <!-- Application Version Number (AVN) - PayPass Magstripe-->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">93</Tag>      <!-- Transaction Type - MasterCard's Idle tap value -->
+
+    <!-- PayPass Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "DF8122">F45004800C</Tag>  <!-- C2Terminal Action Code (Online)-->
+    <Tag Name = "DF8120">F45004800C</Tag>  <!-- C2Terminal Action Code (Default)-->
+    <!-- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "DF8121">0000800000</Tag>  <!-- C2Terminal Action Code (Denial)-->
+
+    <!--These tags values used in Kiosk III V1.20 -->
+    <Tag Name = "DF8117">60</Tag> <!--Card Data Input Capability  -->
+    <Tag Name = "DF8118">40</Tag> <!--CVM Capability - CVM Required   -->
+    <Tag Name = "DF8119">40</Tag> <!--CVM Capability - NO CVM Required  -->
+    <Tag Name = "DF811F">08</Tag>  <!--Security Capability - CDA Enabled -->
+    <!-- <Tag Name = "DF811F">00</Tag> -->  <!-- NO CDA - Security Capability CDA Disabled -->
+
+    <!--Relay Resistance Protocol Settings -->
+    <Tag Name = "DF8132">0025</Tag>  <!-- Minimum Relay Resistance Grace Period -->
+    <Tag Name = "DF8133">0050</Tag>  <!-- Maximum Relay Resistance Grace Period -->
+    <Tag Name = "DF8134">000D</Tag>  <!-- Terminal Expected Transmission Time For Relay Resistance C-APDU -->
+    <Tag Name = "DF8135">000C</Tag>  <!-- Terminal Expected Transmission Time For Relay Resistance R-APDU-->
+    <Tag Name = "DF8136">0040</Tag>  <!-- Relay Resistance Accuracy Threshold -->
+    <Tag Name = "DF8137">32</Tag>    <!-- Relay Resistance Transmission Time Mismatch Threshold -->
+    
+    <!-- A list of the tags which will be included in EMV Blob  -->
+    <!-- This list is based on the "M/Chip Requirements - For   -->
+    <!-- Contact and Contactless" dated 17 November 2019        -->
+    <!-- Additional tags to be returned in the EMV blob can be  -->
+    <!-- added here                                             -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "true">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F53"></Tag> <!-- Transaction Category Code -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->  
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <!--<Tag Name = "9F6E"></Tag> <!-- 3rd Party Data - Form Factor Indicator -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+    </AdditionalHostObjects>
+   </AIDTagGroup>
+  </DeviceVariant>
+
+
+  <!--  VISA Tags Group  -->
+  <AIDTagGroup Index = "2">
+
+    <!--- Visa Terminal Transaction Qualifier (TTQ) -->
+    <!--  Current value supports EMV and Mag. stripe profile cards -->
+    <!--  Edit this if Magnetic Stripe profile cards are not to be supported -->
+    <Tag Name = "9F66">36804000</Tag>   <!-- Visa TTQs Mag. stripe & EMV Supported -->
+
+    <!-- The below alternative TTQ settings support EMV profile but not magnetic stripe profile -->
+    <!--<Tag Name = "9F66">36804000</Tag>-->   <!-- Visa TTQs Only EMV Supported-->	
+
+    <!-- This tag disables the CVN17 to allow pure MSD card transactions -->
+    <!--<Tag Name = "FFF0">000000</Tag>-->  <!-- Specific Feature Switch - Enable VCPS 2.1.1/2.1.2 CVN17 -->
+
+    <!-- DO NOT CHANGE -->
+    <Tag Name = "FFF4">000403</Tag>        <!-- Visa Options-->
+    <Tag Name = "FFF5">000000000000</Tag>  <!-- VISA (not MC) - Cardholder Verification Method (CVM) Required Limit -->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <DeviceVariant Name = "Kiosk2">
+        <Tag Name = "9C">01</Tag>          <!-- Transaction Type - Visa's Idle tap value -->
+    </DeviceVariant>
+    <DeviceVariant Name = "Kiosk3">
+        <Tag Name = "9C">01</Tag>          <!-- Transaction Type - Visa's Idle tap value -->
+    </DeviceVariant>
+    <DeviceVariant Name = "Kiosk3_20.109">
+        <Tag Name = "9C">01</Tag>          <!-- Transaction Type - Visa's Idle tap value -->
+    </DeviceVariant>
+
+    <!-- Terminal Action Codes -->
+    <!-- NOTE - The VISA kernel processing does not use Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online) -->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <!-- Reader specific proprietary tags -->	
+    <DeviceVariant Name = "Wincor Nixdorf">
+        <Tag Name = "DF8223">00</Tag>   <!-- Offline Cash Check -->
+        <Tag Name = "9F33">604000</Tag> <!-- Terminal Capabilities -->
+    </DeviceVariant>
+
+    <!-- A list of the tags which will be included in EMV Blob       -->
+    <!-- This list is based on the EMVCo Contactless C3              -->
+    <!-- specification version 2.8                                   -->
+    <!-- Additional tags to be returned in the EMV blob can be added -->
+    <!-- here                                                        -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <!-- <Tag Name = "9F03"></Tag>  Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F7C"></Tag> <!-- Customer Exclusive Data -->
+        <Tag Name = "9F6E"></Tag> <!-- Form Factor Indicator -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data (CID) -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <!-- <Tag Name = "5F28"></Tag>  Issuer Country Code -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <!-- <Tag Name = "9F4E"></Tag>  Merchant Name and Location -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+
+
+  <!--  Maestro and Cirrus Tags Group  -->
+  <AIDTagGroup Index = "3">
+
+    <!-- For IDTech Firmware GR 2.0.0, the following Terminal related data objects SHOULD be updated here-->
+    <!-- When editing ensure the format of the tag data is correct -->
+    <!-- Incorrect values may put the reader into a bad state which will require a firmware reload -->
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <Tag Name = "9F35">14</Tag>            <!-- Terminal Type is an ATM -->
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+
+    <DeviceVariant Name = "Wincor Nixdorf">
+        <Tag Name = "DF813B">90</Tag>             <!-- C2 Kernel Configuration -->
+        <Tag Name = "DF60">000000030000</Tag>     <!-- Reader Contactless Transaction Limit -->
+        <Tag Name = "DF61">000000000000</Tag>     <!-- CVM Required Limit -->
+        <Tag Name = "DF59">0000800000</Tag>       <!-- TAC Denial -->
+        <Tag Name = "DF5A">F45004800C</Tag>       <!-- TAC Online -->
+        <Tag Name = "DF58">F45004800C</Tag>       <!-- TAC Default -->
+        <Tag Name = "DFA101">40</Tag>             <!-- CVM Capability Byte - No CVM Required -->
+        <Tag Name = "DF811E">20</Tag>             <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+        <Tag Name = "DF812C">20</Tag>             <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+        <Tag Name = "9F1D">4040800000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+        <Tag Name = "9F33">604008</Tag>           <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN, CDA -->
+        <!-- <Tag Name = "9F33">604000</Tag> -->  <!-- NO CDA - This setting should be used when CDA is Disabled -->
+    </DeviceVariant>
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <DeviceVariant Name = "Kiosk2">
+        <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+        <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+        <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "DF8124">30000</Tag>       <!-- Reader Contactless Transaction Limit for readers that do not support On-Device CVM - Edit as required -->
+        <Tag Name = "DF8126">0</Tag>           <!-- Cardholder Verification Method (CVM) Required Limit for PayPass -->
+        <Tag Name = "9F33">604000</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN -->
+        <Tag Name = "9F53">Z</Tag>             <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+        <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+        <Tag Name = "FFF8">03</Tag>      <!-- UI Scheme - DO NOT CHANGE -->
+
+        <!-- DO NOT CHANGE -->
+        <Tag Name = "FFFC">02</Tag>    <!-- PayPass Profile - only EMV-->
+        <Tag Name = "DF28">604000</Tag><!-- Terminal Capabilities - No CVM Requirement (M/Chip v2.0)-->
+        <Tag Name = "DF29">604000</Tag><!-- Terminal Capabilities - CVM Requirement (M/Chip v2.0)-->
+        <Tag Name = "DF811E">20</Tag>  <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+        <Tag Name = "DF812C">20</Tag>  <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+        <Tag Name = "FF69">9F1D084040800000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+
+        <!--- Payment system's recommended value - EDIT ONLY IF REQUIRED -->
+        <Tag Name = "9F09">0002</Tag>  <!-- Application Version Number (PayPass M/Chip)-->
+        <Tag Name = "9F6D">0001</Tag>  <!-- Application Version Number (AVN) - PayPass Magstripe-->
+
+        <!-- Transaction Type used when not defined in transaction identifier section -->
+        <Tag Name = "9C">93</Tag>      <!-- Transaction Type - MasterCard's Idle tap value -->
+
+        <!-- PayPass Terminal Action Codes -->
+        <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+        <Tag Name = "DF8122">F45004800C</Tag>  <!-- C2Terminal Action Code (Online)-->
+        <Tag Name = "DF8120">F45004800C</Tag>  <!-- C2Terminal Action Code (Default)-->
+        <!-- Payment systems recommended value - EDIT IF REQUIRED -->
+        <Tag Name = "DF8121">0000800000</Tag>  <!-- C2Terminal Action Code (Denial)-->
+    </DeviceVariant>
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <DeviceVariant Name = "Kiosk3">
+        <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+        <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+        <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+        <Tag Name = "DF8124">30000</Tag>       <!-- Reader Contactless Transaction Limit for readers that do not support On-Device CVM - Edit as required -->
+        <Tag Name = "DF8126">0</Tag>           <!-- Cardholder Verification Method (CVM) Required Limit for PayPass -->
+        <Tag Name = "9F33">604000</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN -->
+        <Tag Name = "9F53">Z</Tag>             <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+        <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+        <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+        <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+        <Tag Name = "FFF8">03</Tag>      <!-- UI Scheme - DO NOT CHANGE -->
+
+        <!-- DO NOT CHANGE -->
+        <Tag Name = "FFFC">02</Tag>    <!-- PayPass Profile - only EMV-->
+        <Tag Name = "DF28">604000</Tag><!-- Terminal Capabilities - No CVM Requirement (M/Chip v2.0)-->
+        <Tag Name = "DF29">604000</Tag><!-- Terminal Capabilities - CVM Requirement (M/Chip v2.0)-->
+        <Tag Name = "DF811E">20</Tag>  <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+        <Tag Name = "DF812C">20</Tag>  <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+        <Tag Name = "FF69">9F1D084040800000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+
+        <!--- Payment system's recommended value - EDIT ONLY IF REQUIRED -->
+        <Tag Name = "9F09">0002</Tag>  <!-- Application Version Number (PayPass M/Chip)-->
+        <Tag Name = "9F6D">0001</Tag>  <!-- Application Version Number (AVN) - PayPass Magstripe-->
+
+        <!-- Transaction Type used when not defined in transaction identifier section -->
+        <Tag Name = "9C">93</Tag>      <!-- Transaction Type - MasterCard's Idle tap value -->
+
+        <!-- PayPass Terminal Action Codes -->
+        <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+        <Tag Name = "DF8122">F45004800C</Tag>  <!-- C2Terminal Action Code (Online)-->
+        <Tag Name = "DF8120">F45004800C</Tag>  <!-- C2Terminal Action Code (Default)-->
+        <!-- Payment systems recommended value - EDIT IF REQUIRED -->
+        <Tag Name = "DF8121">0000800000</Tag>  <!-- C2Terminal Action Code (Denial)-->
+    </DeviceVariant>
+
+    <!-- A list of the tags which will be included in EMV Blob  -->
+    <!-- This list is based on the "M/Chip Requirements - For   -->
+    <!-- Contact and Contactless" dated 17 November 2019        -->
+    <!-- Additional tags to be returned in the EMV blob can be  -->
+    <!-- added here                                             -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "true">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F53"></Tag> <!-- Transaction Category Code -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <!--<Tag Name = "9F6E"></Tag> <!-- 3rd Party Data - Form Factor Indicator -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+
+
+  <!--  Maestro and Cirrus Tags Group for Kiosk 3 v1.20 -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AIDTagGroup Index = "9">
+
+    <!-- For IDTech Firmware GR 2.0.0, the following Terminal related data objects SHOULD be updated here-->
+    <!-- When editing ensure the format of the tag data is correct -->
+    <!-- Incorrect values may put the reader into a bad state which will require a firmware reload -->
+    <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+
+    <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+    <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+    <Tag Name = "DF8124">200000</Tag>       <!-- Reader Contactless Transaction Limit for readers that do not support On-Device CVM - Edit as required -->
+    <Tag Name = "DF8126">0</Tag>           <!-- Cardholder Verification Method (CVM) Required Limit for PayPass -->
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <Tag Name = "9F35">14</Tag>            <!-- Terminal Type is an ATM -->
+    <Tag Name = "9F33">604008</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN, CDA -->
+    <!--<Tag Name = "9F33">604000</Tag>--> <!-- NO CDA - This setting should be used when CDA is Disabled-->        
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+    <Tag Name = "9F53">Z</Tag>             <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+    <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+    <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+    <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+    <Tag Name = "FFF8">03</Tag>      <!-- UI Scheme - DO NOT CHANGE -->
+
+    <!-- DO NOT CHANGE -->
+    <Tag Name = "DF811B">90</Tag>           <!-- Kernel Configuration- only EMV and RRP supported-->
+    <Tag Name = "DF28">604008</Tag>         <!-- Terminal Capabilities - No CVM Requirement (M/Chip v2.0) with CDA -->
+    <!-- <Tag Name = "DF28">604000</Tag> --><!-- NO CDA - Terminal Capabilities - No CVM Requirement (M/Chip v2.0) CDA Disbaled -->
+    <Tag Name = "DF29">604008</Tag>         <!-- Terminal Capabilities - CVM Requirement (M/Chip v2.0) WITH CDA -->
+    <!-- <Tag Name = "DF29">604000</Tag>--> <!-- NO CDA -  Terminal Capabilities - CVM Requirement (M/Chip v2.0) CDA Disabled -->
+
+    <Tag Name = "DF811E">20</Tag>  <!-- PayPass Mag-stripe CVM Capability Byte - CVM Requirement -->
+    <Tag Name = "DF812C">20</Tag>  <!-- PayPass Mag-stripe CVM Capability Byte - No CVM Requirement -->
+    <Tag Name = "FF69">9F1D084040800000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+    <Tag Name = "9F1D">4040800000000000</Tag> <!-- PayPass Terminal Risk Management Data -->
+
+    <!--- Payment system's recommended value - EDIT ONLY IF REQUIRED -->
+    <Tag Name = "9F09">0002</Tag>  <!-- Application Version Number (PayPass M/Chip)-->
+    <Tag Name = "9F6D">0001</Tag>  <!-- Application Version Number (AVN) - PayPass Magstripe-->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">93</Tag>      <!-- Transaction Type - MasterCard's Idle tap value -->
+
+    <!-- PayPass Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "DF8122">F45004800C</Tag>  <!-- C2Terminal Action Code (Online)-->
+    <Tag Name = "DF8120">F45004800C</Tag>  <!-- C2Terminal Action Code (Default)-->
+    <!-- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "DF8121">0000800000</Tag>  <!-- C2Terminal Action Code (Denial)-->
+
+    <Tag Name = "DF8117">60</Tag> <!--Card Data Input Capability  -->
+    <Tag Name = "DF8118">40</Tag> <!--CVM Capability - CVM Required   -->
+    <Tag Name = "DF8119">40</Tag> <!--CVM Capability - NO CVM Required  -->
+
+    <Tag Name = "DF811F">08</Tag>  <!--Security Capability - CDA Enabled -->
+    <!-- <Tag Name = "DF811F">00</Tag>--> <!-- NO CDA - Security Capability - CDA Disabled -->
+
+    <!--Relay Resistance Protocol Settings -->
+    <Tag Name = "DF8132">0025</Tag>  <!-- Minimum Relay Resistance Grace Period -->
+    <Tag Name = "DF8133">0050</Tag>  <!-- Maximum Relay Resistance Grace Period -->
+    <Tag Name = "DF8134">000D</Tag>  <!-- Terminal Expected Transmission Time For Relay Resistance C-APDU -->
+    <Tag Name = "DF8135">000C</Tag>  <!-- Terminal Expected Transmission Time For Relay Resistance R-APDU-->
+    <Tag Name = "DF8136">0040</Tag>  <!-- Relay Resistance Accuracy Threshold -->
+    <Tag Name = "DF8137">32</Tag>    <!-- Relay Resistance Transmission Time Mismatch Threshold -->
+    
+    <!-- A list of the tags which will be included in EMV Blob  -->
+    <!-- This list is based on the "M/Chip Requirements - For   -->
+    <!-- Contact and Contactless" dated 17 November 2019        -->
+    <!-- Additional tags to be returned in the EMV blob can be  -->
+    <!-- added here                                             -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "true">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F53"></Tag> <!-- Transaction Category Code -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <!--<Tag Name = "9F6E"></Tag> <!-- 3rd Party Data - Form Factor Indicator -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+    </AdditionalHostObjects>
+   </AIDTagGroup>
+  </DeviceVariant>
+
+
+  <!--  INTERAC, CUP and STAR Tags Group for Kiosk III V1.10 -->
+  <AIDTagGroup Index = "4">
+    <Tag Name = "9F58">01</Tag>          <!-- Merchant Type Indicator -->
+    <Tag Name = "9F5E">E000</Tag>        <!-- Terminal Option Status -->
+    <Tag Name = "9F5F">000000000000</Tag><!-- Terminal(Reader) Contactless Floor Limit -->
+    <Tag Name = "9F5A">00</Tag>          <!-- Terminal Transaction Type -->  
+    <Tag Name = "9F59">C4C700</Tag>      <!-- Terminal Transaction Information -->
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "9F66">B6804000</Tag>    <!-- Visa TTQs Mag. stripe & EMV Supported -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0010000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">01</Tag>            <!-- Transaction Type - Idle tap value -->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is based on the EMVCo Contactless C7              -->
+    <!-- specification version 2.8, table C-1                        -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F63"></Tag> <!-- Product Identification Information -->
+        <Tag Name = "9F46"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F1F"></Tag> <!-- Track1 Self Defined Data -->
+        <Tag Name = "9F7C"></Tag> <!-- Partner Proprietary Data -->
+        <Tag Name = "9F0A"></Tag> <!-- ASRPD -->
+        <Tag Name = "9F25"></Tag> <!-- Last 4 PAN Digits -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->        
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+
+
+  <!--  INTERAC Group for Kiosk III V1.20 -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+   <AIDTagGroup Index = "24">
+
+    <!-- For Kiosk 3 v1.20 the Terminal related data objects SHOULD be updated -->
+    <!-- here. The DefaultTerminalTags are not use for INTERAC Cards.          -->
+    <!-- When editing ensure the format is correct. Incorrect values may put   -->
+    <!-- the reader into a bad state which will require a firmware reload      -->
+
+    <Tag Name = "9F15">6011</Tag>          <!-- Merchant Category Code  - Edit as required -->
+
+    <Tag Name = "9F1A">0112</Tag>          <!-- Terminal Country Code - Belarus - Edit as required -->
+    <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code BYN - Edit as required  -->
+
+    <!-- Terminal Properties tags - DO NOT CHANGE -->
+    <Tag Name = "9F35">14</Tag>            <!-- Terminal Type is an ATM -->
+    <Tag Name = "9F33">604000</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN -->
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+    <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+    <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+    
+    <Tag Name = "9F58">01</Tag>          <!-- Merchant Type Indicator -->
+    <Tag Name = "9F5E">E000</Tag>        <!-- Terminal Option Status -->
+    <Tag Name = "9F5F">000000000000</Tag><!-- Terminal(Reader) Contactless Floor Limit -->
+    <Tag Name = "9F5A">00</Tag>          <!-- Terminal Transaction Type -->
+    <Tag Name = "9F59">C4C700</Tag>      <!-- Terminal Transaction Information -->
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "9F66">B6804000</Tag>    <!-- Visa TTQs Mag. stripe & EMV Supported -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">01</Tag>            <!-- Transaction Type - Idle tap value -->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is based on the EMVCo Contactless C7              -->
+    <!-- specification version 2.8, table C-1                        -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F63"></Tag> <!-- Product Identification Information -->
+        <Tag Name = "9F46"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F1F"></Tag> <!-- Track1 Self Defined Data -->
+        <Tag Name = "9F7C"></Tag> <!-- Partner Proprietary Data -->
+        <Tag Name = "9F0A"></Tag> <!-- ASRPD -->
+        <Tag Name = "9F25"></Tag> <!-- Last 4 PAN Digits -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+    </AdditionalHostObjects>
+   </AIDTagGroup>
+  </DeviceVariant>
+
+
+  <!--  Discover Tags Group  -->
+  <AIDTagGroup Index = "5">
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <!-- NOTE - The Discover kernel processing does not use Action Codes -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <Tag Name = "9F66">B6808000</Tag>    <!-- Terminal Transaction Qualifiers --> 
+    <!-- Issuer Update Processing supported is mandatory for online terminals Section 8.2 Table 49 Term App Spec v1.0 -->
+
+    <Tag Name = "FFF4">000601</Tag>       <!-- IDTech VISA Reader Risk Flags -->
+    <Tag Name = "9F09">0256</Tag>         <!-- Application Version Number -->
+    <Tag Name = "FFF1">30000</Tag>        <!-- Terminal Contactless Transaction Limit -->
+    <Tag Name = "FFF5">000000000000</Tag> <!-- CVM Limit -->
+    <Tag Name = "9F1B">00000000</Tag>     <!-- Floor Limit -->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">01</Tag>             <!-- Transaction Type - Idle tap value -->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is taken from the EMVCo Contactless C6            -->
+    <!-- specification version 2.4                                   -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "9F06"></Tag> <!-- Application Identifier (AID) -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "5F20"></Tag> <!-- Cardholder Name -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F1F"></Tag> <!-- Track 1 Discretionary Data -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+
+  <!--  Discover D-PAS Group for Kiosk III V1.20 -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+   <AIDTagGroup Index = "20">
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <!-- NOTE - The Discover kernel processing does not use Action Codes -->
+    <Tag Name = "DF8122">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "DF8120">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "DF8121">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <Tag Name = "9F66">B6808000</Tag>      <!-- Terminal Transaction Qualifiers --> 
+    <!-- Issuer Update Processing supported is mandatory for online terminals Section 8.2 Table 49 Term App Spec v1.0 -->
+
+    <Tag Name = "DFEE35">000601</Tag>       <!-- IDTech VISA Reader Risk Flags -->
+    <Tag Name = "9F09">0256</Tag>           <!-- Application Version Number -->
+    <Tag Name = "DF8123">30000</Tag>        <!-- Terminal Contactless Transaction Limit -->
+    <Tag Name = "DF8126">000000000000</Tag> <!-- CVM Limit -->
+    <Tag Name = "9F1B">00000000</Tag>       <!-- Floor Limit -->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">01</Tag>        <!-- Transaction Type - Idle tap value -->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is taken from the EMVCo Contactless C6            -->
+    <!-- specification version 2.4                                   -->
+    <!-- If you need additional tags returned in the EMV blob then add them here -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "9F06"></Tag> <!-- Application Identifier (AID) -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "5F20"></Tag> <!-- Cardholder Name -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F1F"></Tag> <!-- Track 1 Discretionary Data -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+    </AdditionalHostObjects>
+   </AIDTagGroup>
+  </DeviceVariant>
+  
+  <!--Amex Tags Group for Kiosk III V1.10 -->
+  <AIDTagGroup Index = "6">
+
+    <DeviceVariant Name = "Kiosk2">
+        <Tag Name = "9F09">0001</Tag> <!-- Amex Application Version Number -->
+        <Tag Name = "9F33">604000</Tag> <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN -->
+        <Tag Name = "9F6E">58E00000 </Tag> <!-- Enhanced Express Pay Terminal Capabilities -->
+        <!-- Transaction Type used when not defined in transaction identifier section -->
+        <Tag Name = "9C">01</Tag>        <!-- Transaction Type - Idle tap value -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Kiosk3">
+        <Tag Name = "9F09">0001</Tag> <!-- Amex Application Version Number -->
+        <Tag Name = "9F33">604000</Tag> <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN -->
+        <Tag Name = "9F6E">58E00000 </Tag> <!-- Enhanced Express Pay Terminal Capabilities -->
+        <!-- Transaction Type used when not defined in transaction identifier section -->
+        <Tag Name = "9C">01</Tag>        <!-- Transaction Type - Idle tap value -->
+    </DeviceVariant>
+
+    <DeviceVariant Name = "Wincor Nixdorf">
+        <Tag Name = "9F09">0001</Tag> <!-- Amex Application Version Number -->
+        <Tag Name = "9F33">604000</Tag> <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN -->
+    </DeviceVariant>
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is based on the EMVCo Contactless C4              -->
+    <!-- specification version 2.8, Table 14-6                       -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+
+
+  <!--Amex Tags Group for Kiosk III V1.20 --> 
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AIDTagGroup Index = "16">
+
+    <!-- For Kiosk 3 v1.20 the Terminal related data objects SHOULD be updated -->
+    <!-- here. The DefaultTerminalTags are not use for AMEX Cards.             -->
+    <!-- When editing ensure the format is correct. Incorrect values may put   -->
+    <!-- the reader into a bad state which will require a firmware reload      -->
+
+    <Tag Name = "9F15">6011</Tag>   <!-- Merchant Category Code  - Edit as required -->
+
+    <Tag Name = "9F1A">0112</Tag>   <!-- Terminal Country Code - Belarus - Edit as required -->
+    <Tag Name = "5F2A">0933</Tag>   <!-- Transaction Currency Code BYN - Edit as required  -->
+
+    <Tag Name = "9F35">14</Tag>   <!-- Terminal Type is an ATM -->
+
+    <Tag Name = "9F33">604000</Tag> <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+    <Tag Name = "9F40">E800B053FF</Tag>    <!-- Additional Terminal Capabilities -->
+    <Tag Name = "9F1B">00000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+    <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+
+    <Tag Name = "9F6E">58E00000 </Tag> <!-- Enhanced Express Pay Terminal Capabilities -->
+    <Tag Name = "9F09">0001</Tag>      <!-- Amex Application Version Number -->
+
+    <!-- IDTech Device Specific Behaviour Tags - DO NOT CHANGE -->
+    <Tag Name = "FFF8">03</Tag>        <!-- UI Scheme - DO NOT CHANGE -->
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">01</Tag>        <!-- Transaction Type - Idle tap value -->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is based on the EMVCo Contactless C4              -->
+    <!-- specification version 2.8, Table 14-6                       -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+    </AdditionalHostObjects>
+    </AIDTagGroup>
+  </DeviceVariant>
+
+  <!--  JCB Tags Group  -->
+  <AIDTagGroup Index = "7">
+
+    <!-- Terminal Action Codes -->
+    <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+    <Tag Name = "FFFD">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Online)-->
+    <Tag Name = "FFFE">FFFFFFFFFF</Tag>  <!-- Terminal Action Code (Default)-->
+    <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+    <Tag Name = "FFFF">0000000000</Tag>  <!-- Terminal Action Code (Denial)-->
+
+    <!-- Transaction Type used when not defined in transaction identifier section -->
+    <Tag Name = "9C">01</Tag>           <!-- Transaction Type - Idle tap value -->
+    <Tag Name = "9F35">14</Tag>         <!-- Terminal Type is an ATM -->
+    <Tag Name = "FFF1">30000</Tag>      <!-- Terminal Contactless Transaction Limit -->
+    <Tag Name = "9F1B">00000000</Tag>   <!-- Floor Limit -->
+    <Tag Name = "DFEF44">5B00</Tag>     <!-- JCB Combination Options - ODA not supported -->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- This list is based on the EMVCo Contactless C5              -->
+    <!-- specification version 2.8, table C-1                        -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <!-- Recommended -->
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <Tag Name = "9F03"></Tag> <!-- Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "50"></Tag>   <!-- Application Label -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F09"></Tag> <!-- Application Version Number -->   
+        <Tag Name = "5F20"></Tag> <!-- Cardholders Name -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F6E"></Tag> <!-- Device Information -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F7C"></Tag> <!-- Partner Discretionary Data -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F1F"></Tag> <!-- Track 1 Discretionary Data -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+        <Tag Name = "5A"></Tag>   <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "84"></Tag>   <!-- DF Name -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID -->
+    </AdditionalHostObjects>
+  </AIDTagGroup>
+  
+  <!--  MIR Tags Group  -->
+  <!-- MIR Recommended Firmware: v1.20.118 and above -->
+  <DeviceVariant Name = "Kiosk3_20.109">
+    <AIDTagGroup Index = "10">
+
+      <!-- Terminal Action Codes -->
+      <!--- Payment systems recommended value - EDIT IF REQUIRED -->
+      <Tag Name = "FF01">0010000000</Tag>  <!-- Terminal Action Code (Denial)-->
+      <!-- DO NOT CHANGE ONLINE OR DEFAULT -->
+      <Tag Name = "FF02">0000048000</Tag>  <!-- Terminal Action Code (Online)-->
+      <Tag Name = "FF03">0000000000</Tag>  <!-- Terminal Action Code (Default)-->
+
+      <!-- Transaction Type used when not defined in transaction identifier section -->
+      <Tag Name = "9C">01</Tag>             <!-- Transaction Type - Idle tap value -->
+      <Tag Name = "9F1A">0112</Tag>         <!-- Terminal Country Code -->
+      <Tag Name = "5F2A">0933</Tag>         <!-- Transaction Currency Code -->
+     <!-- <Tag Name = "9F03">000000000000</Tag>  Amount, Other -->  
+      <Tag Name = "9F09">0257</Tag>         <!-- Application Version Number -->
+      <Tag Name = "DF51">00000000</Tag>     <!-- Floor Limit-->
+      <Tag Name = "DF52">10000</Tag>        <!-- No CVM Limit-->
+      <Tag Name = "DF53">20000000</Tag>     <!--Contactless Limit (Non CD-CVM)-->
+      <Tag Name = "DF54">30000</Tag>        <!--Contactless Limit (CD-CVM)-->
+      <Tag Name = "DF55">8900</Tag>         <!--Terminal TPM Capabilities-->
+      <Tag Name = "DF56">03</Tag>           <!--Transaction Recovery Limit-->
+      <Tag Name = "9F35">14</Tag>           <!-- Terminal Type is an ATM -->
+      <!--<Tag Name = "FF04">5A</Tag>            Data Exchange Tag List-->
+
+    <!-- A list of the tags which will be included in EMV Blob if    -->
+    <!-- they have been returned by the card or have been configured -->
+    <!-- If you need additional tags returned in the EMV blob then   -->
+    <!-- add them here                                               -->
+    <AdditionalHostObjects OnlyIncludeTheseTags = "true" IncludeForMSD = "false">
+        <Tag Name = "9F02"></Tag> <!-- Amount, Authorized -->
+        <!--Tag Name = "9F03"></Tag> < Amount, Other -->
+        <Tag Name = "9F26"></Tag> <!-- Application Cryptogram -->
+        <Tag Name = "82"></Tag>   <!-- Application Interchange Profile -->
+        <Tag Name = "5F34"></Tag> <!-- Application PAN Sequence Number -->
+        <Tag Name = "9F36"></Tag> <!-- Application Transaction Counter -->
+        <Tag Name = "9F34"></Tag> <!-- CVM Results -->
+        <Tag Name = "5F20"></Tag> <!-- Cardholder Name -->
+        <Tag Name = "9F27"></Tag> <!-- Cryptogram Information Data -->
+        <Tag Name = "9F10"></Tag> <!-- Issuer Application Data -->
+        <Tag Name = "9F39"></Tag> <!-- POS Entry Mode -->
+        <Tag Name = "9F1A"></Tag> <!-- Terminal Country Code -->
+        <Tag Name = "95"></Tag>   <!-- Terminal Verification results -->
+        <Tag Name = "9F1F"></Tag> <!-- Track 1 Discretionary Data -->
+        <Tag Name = "57"></Tag>   <!-- Track 2 Equivalent Data -->
+        <Tag Name = "5F2A"></Tag> <!-- Transaction Currency Code -->
+        <Tag Name = "9A"></Tag>   <!-- Transaction Date -->
+        <Tag Name = "9F21"></Tag> <!-- Transaction Time -->
+        <Tag Name = "9C"></Tag>   <!-- Transaction Type -->
+        <Tag Name = "9F37"></Tag> <!-- Unpredictable Number -->
+        <Tag Name = "DF74"></Tag> <!-- Kernel Verification Results (KVR) -->
+
+        <!-- Others -->
+        <Tag Name = "5F24"></Tag> <!-- Application Expiration Date - DE 14 -->
+        <Tag Name = "50"></Tag> <!-- Application Label -->
+        <Tag Name = "5A"></Tag> <!-- Application PAN - DE 2 -->
+        <Tag Name = "9F12"></Tag> <!-- Application Preferred Name -->
+        <Tag Name = "9F07"></Tag> <!-- Application Usage Control -->
+        <Tag Name = "9F1E"></Tag> <!-- Interface Device Serial Number -->
+        <Tag Name = "9F24"></Tag> <!-- Payment Account Reference (PAR) -->
+        <Tag Name = "9F19"></Tag> <!-- Token Requestor ID -->
+        <Tag Name = "9F33"></Tag> <!-- Terminal Capabilities -->
+        <Tag Name = "9F41"></Tag> <!-- Transaction Sequence Counter -->
+        <Tag Name = "5F28"></Tag> <!-- Issuer Country Code -->
+        <Tag Name = "9F11"></Tag> <!-- Issuer Code Table Index -->
+        <Tag Name = "9F06"></Tag> <!-- Terminal AID --> 
+        <Tag Name = "84"></Tag> <!-- Dedicated File (DF) Name -->
+        <Tag Name = "9F35"></Tag> <!-- Terminal Type -->
+    </AdditionalHostObjects>
+    </AIDTagGroup>
+  </DeviceVariant>
+ 
+  <TRANSACTIONIDENTIFIERS>
+     <!-- A list of the transaction identifiers and their associated tags    -->
+     <!-- The only tags supported in this section are 9F02, 5F2A, 9F1A, 9C   -->
+     <!-- Amount Authorised if listed here will overwrite the value supplied -->
+     <!-- to the startTransaction command as a parameter                     -->
+
+     <!-- THE BELOW ARE EXAMPLES ONLY AND SHOULD BE CONFIGURE FOR YOUR SPECIFIC NEEDS -->
+
+    <TransactionID Name = "Idle Tap"> <!-- Idle Tap Example -->
+      <Tag Name = "5F2A">0933</Tag>   <!-- Transaction Currency Code-->
+      <Tag Name = "5F36">02</Tag>     <!-- Transaction Currency Exponent - Edit as required -->
+      <!-- No transaction type as this is supplied within the AIDTagGroup -->
+
+      <DeviceVariant Name = "Wincor Nixdorf">
+          <Tag Name = "9F02">000000000000</Tag>      <!-- Amount, Authorized -->
+          <Tag Name = "9F33">604000</Tag>        <!-- Terminal Capabilities - Mag. Stripe, IC with contact, Online PIN-->
+          <Tag Name = "9F53">Z</Tag>            <!-- Transaction Category Code - 'Z' Cash Disbursement-->
+          <Tag Name = "9F1B">000000000000</Tag>      <!-- Terminal Floor Limit - Online Only ATM so must be set to 0-->
+          <Tag Name = "9F03">000000000000</Tag>  <!-- Amount, Other (Numeric) for cashback should be 0 -->
+          <Tag Name = "DF51">80</Tag>     <!-- ExpressPay Terminal Capabilities-->
+      </DeviceVariant>
+    </TransactionID>
+
+    <TransactionID Name = "*">   <!-- Balance Tx Example -->
+      <Tag Name = "9C">01</Tag>        <!-- Transaction Type-->
+      <Tag Name = "5F2A">0933</Tag>    <!-- Transaction Currency Code-->
+      <Tag Name = "9F02">000000006000</Tag>    
+    </TransactionID>
+
+    <TransactionID Name = "Cash withdrawal"> <!-- Cash BYN Example-->
+      <Tag Name = "9C">01</Tag>              <!-- Transaction Type-->
+      <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code-->
+      <Tag Name = "5F36">02</Tag>            <!-- Transaction Currency Exponent - Edit as required -->
+      <AddDecimalsToAmount>0</AddDecimalsToAmount>
+    </TransactionID>
+
+    <TransactionID Name = "FastCash 10">    <!-- Cash BYN -->
+      <Tag Name = "9C">01</Tag>             <!-- Transaction Type-->
+      <Tag Name = "5F2A">0933</Tag>         <!-- Transaction Currency Code-->
+      <Tag Name = "9F02">000000001000</Tag> <!-- Amount is 10 -->
+      <Tag Name = "5F36">02</Tag>           <!-- Transaction Currency Exponent - Edit as required -->
+    </TransactionID>
+
+    <TransactionID Name = "FastCash 20">     <!-- Cash BYN -->
+      <Tag Name = "9C">01</Tag>              <!-- Transaction Type-->
+      <Tag Name = "5F2A">0933</Tag>          <!-- Transaction Currency Code-->
+      <Tag Name = "9F02">000000002000</Tag>  <!-- Amount is 20 -->
+      <Tag Name = "5F36">02</Tag>            <!-- Transaction Currency Exponent - Edit as required -->
+    </TransactionID>
+
+    <!-- The following is an example for a fastCash or AANDC Opcode Buffer where amount  -->
+    <!-- coming in from the application is not padded with the decimal values            -->
+    <!-- In this case, the "AmountExponentPadding" tag will enable the padding of amount -->
+    <!-- within the Enabler                                                              -->
+    <TransactionID Name = "ADC   C "> <!-- Opcode Buffer for Mid-Flow Tap amount entry -->
+      <Tag Name = "9C">01</Tag>       <!-- Transaction Type-->
+      <Tag Name = "5F2A">0933</Tag>   <!-- Transaction Currency Code-->
+      <Tag Name = "5F36">02</Tag>     <!-- Transaction Currency Exponent - Edit as required -->
+      <AddDecimalsToAmount>1</AddDecimalsToAmount>
+    </TransactionID>
+
+  </TRANSACTIONIDENTIFIERS>
+
+  <ReaderUIConfiguration>
+    <Beep>0</Beep>         <!-- 0 = No Buzzer, 1 = Use Reader Buzzer only  -->
+    <LED>1</LED>           <!-- 0 = No LEDs, 1 = Use Reader LEDs -->
+  </ReaderUIConfiguration>
+
+  <!-- ENHANCED FORM FACTOR REPORTING( 0=DISABLE(default if not present), 1=ENABLE  ) -->
+  <EnhancedFormFactorReporting>0</EnhancedFormFactorReporting> 
+
+  <!-- This is a VISA Option. VISA recommend this is set to DISABLE for an ATM by default.-->
+  <ATMOFFLINECHECK>0</ATMOFFLINECHECK>   <!-- VISA ATM OFFLINE CHECK PROCESSING RESTRICTIONS ( 0=DISABLE (default if not present), 1=ENABLE ) -->
+
+  <!-- This is a VISA Option to check that a TC cryptogram type is not returned for Visa Online Transactions.-->
+  <!-- This check is enabled internally by default. If this check fails the transaction will be terminated by returning an endApplication outcome-->
+  <RETURNENDAPPLICATIONONCARDTC>0</RETURNENDAPPLICATIONONCARDTC>   
+
+  <!-- This is a VISA Option for enabling Track 2 Consistency Check between PAN found in Track 2  Data vs PAN returned by the card separately-->
+  <!-- This check is enabled internally by default. If this check fails  the transaction will be terminated by returning an endApplication outcome-->
+  <TRACKCHECK>1</TRACKCHECK>
+
+  <!-- This is a VISA Option for returning a retap_Outcome when card returns a 69 86 status word  to indicate the terminal to display "See Phone for Instructions" message-->
+  <!--This Check is enabled internally by default.  If an application does not support the retap_Outcome yet, this check can be disabled-->
+  <RETURNRETAPOUTCOME>1</RETURNRETAPOUTCOME>
+
+  <!-- This is a VISA option to enable checking the presence of mandatory tag 9F10 -->
+  <!-- This check is enabled internally by default. If this check fails  the transaction will be terminated by returning an endApplication outcome-->
+  <IADMissingCheck>1</IADMissingCheck>
+
+  <InadvertantTap>
+    <!-- The time to wait, following a contactless card tap, to detect the insertion of a card at the contact card readers width switch -->
+    <WidthSwitchTimer>1400</WidthSwitchTimer>  <!-- Timer unit : MilliSeconds  -->
+
+    <!-- Following a width switch event the Enabler will wait for this timer for an application cancel request. 
+         If a cancel is not received within this time, the outcome value defined in the "OutcomeOnNoCardInsert" 
+         element below will be returned by the Enabler -->
+    <EnablerDelayTimer>4000</EnablerDelayTimer><!-- Timer unit : MilliSeconds -->
+
+    <!-- This is the outcome returned by Enabler if application does not cancel a contactless tap after receiving a card inserted event, 
+         String values allowed here are  "EndApplication" & "TryAgain" only -->
+    <OutcomeOnNoCardInsert>"EndApplication"</OutcomeOnNoCardInsert>
+
+    <!-- The time to wait, following a Auto Switch Enabled-->
+    <AutoSwitchDelayTimer>3000</AutoSwitchDelayTimer><!-- Timer unit : MilliSeconds -->
+
+  </InadvertantTap>
+
+  <!-- Reports media arrival/removal events. These events are enabled internally by default -->
+  <EnableMediaStatusEvents>1</EnableMediaStatusEvents>
+
+
+  <!-- This timer is applicable only for the idle loop and is used internally by the enabler when polling the reader. 
+       During Idle, this internal timer is supplied to the reader and if the reader returns time-out the Enabler re-enables the reader for another timer value.
+       This only stops upon a cancel request or when the return returns either an error or data from a card tap.
+       Ideally this timer should be in the range of 150 seconds to 255 seconds. 
+       Any values outside this range will be considered invalid and a default of 150 seconds will be taken -->
+   
+  <CardTapWaitTimer>150</CardTapWaitTimer>
+
+  <!-- Suppress EMV Data on MSD profile transactions.
+       When enabled, any Mag-stripe like card tap will result in no EMV data objects in the CardData.anEMVData field.
+       '0' - Allow EMV Data to be returned when MSD card tapped.
+       '1' - Suppress all EMV Data when MSD card tapped.
+
+       Default Value will be set to '0'.-->
+  <SuppressEMVDataOnMSD>0</SuppressEMVDataOnMSD>
+
+  <!-- By default, Sentinels are present.A non zero value will Remove Sentinels from Track Data-->
+  <EXCLUDESENTINELSFROMTRACKDATA>0</EXCLUDESENTINELSFROMTRACKDATA>
+
+  <!-- Below setting is only for Activate Users to Remove Sentinels from Track Data-->
+  <!--<EXCLUDESENTINELSFROMTRACKDATA>1</EXCLUDESENTINELSFROMTRACKDATA>-->
+ 
+  
+  <!-- This section contains the CA Public Keys for performing Offline Data Authentication -->
+  <!-- Below are the MasterCard Keys for Production Environment -->
+  <!-- Do not change any values within the OfflineAuthenticationKeys and KeySignature sections below -->
+  <!-- Doing so will result in a device configuration failure -->
+
+  <!-- An alternative version of this file is supplied with a signed set of MasterCard Brand Approval test keys for use during Brand Testing -->
+  <!-- If different set of keys are required, please contact the Solution Manager -->
+
+  <!-- "HashAlgo" - the only algo supported is SHA-1. Value to always be set to 01 -->
+  <!-- "EncryptionKeyAlgo" - the only encryption algo supported is RSA. Value to always be set to 01 -->
+  <!-- "CAPublicKeyExponent" - the only allowed values here are 03 and 010001 -->
+
+  <OfflineAuthenticationKeys>
+    <Key>
+       <RID>A000000004</RID>
+       <HashAlgo>01</HashAlgo>
+       <EncryptionKeyAlgo>01</EncryptionKeyAlgo>
+       <CAPublicKeyIndex>05</CAPublicKeyIndex>
+       <CAPublicKeyExponent>03</CAPublicKeyExponent>
+       <CAPublicKeyModulus>B8048ABC30C90D976336543E3FD7091C8FE4800DF820ED55E7E94813ED00555B573FECA3D84AF6131A651D66CFF4284FB13B635EDD0EE40176D8BF04B7FD1C7BACF9AC7327DFAA8AA72D10DB3B8E70B2DDD811CB4196525EA386ACC33C0D9D4575916469C4E4F53E8E1C912CC618CB22DDE7C3568E90022E6BBA770202E4522A2DD623D180E215BD1D1507FE3DC90CA310D27B3EFCCD8F83DE3052CAD1E48938C68D095AAC91B5F37E28BB49EC7ED597</CAPublicKeyModulus>
+       <CAPublicKeyChecksum>EBFA0D5D06D8CE702DA3EAE890701D45E274C845</CAPublicKeyChecksum>
+    </Key>
+
+    <Key>
+       <RID>A000000004</RID>
+       <HashAlgo>01</HashAlgo>
+       <EncryptionKeyAlgo>01</EncryptionKeyAlgo>
+       <CAPublicKeyIndex>06</CAPublicKeyIndex>
+       <CAPublicKeyExponent>03</CAPublicKeyExponent>
+       <CAPublicKeyModulus>CB26FC830B43785B2BCE37C81ED334622F9622F4C89AAE641046B2353433883F307FB7C974162DA72F7A4EC75D9D657336865B8D3023D3D645667625C9A07A6B7A137CF0C64198AE38FC238006FB2603F41F4F3BB9DA1347270F2F5D8C606E420958C5F7D50A71DE30142F70DE468889B5E3A08695B938A50FC980393A9CBCE44AD2D64F630BB33AD3F5F5FD495D31F37818C1D94071342E07F1BEC2194F6035BA5DED3936500EB82DFDA6E8AFB655B1EF3D0D7EBF86B66DD9F29F6B1D324FE8B26CE38AB2013DD13F611E7A594D675C4432350EA244CC34F3873CBA06592987A1D7E852ADC22EF5A2EE28132031E48F74037E3B34AB747F</CAPublicKeyModulus>
+       <CAPublicKeyChecksum>F910A1504D5FFB793D94F3B500765E1ABCAD72D9</CAPublicKeyChecksum>
+    </Key>
+
+  </OfflineAuthenticationKeys>
+
+   
+  <!--This Section Contains Signature of the CA Public Keys for performing Offline Data Authentication-->
+  <KeySignature>7D373CA9530FDA4563DB606AE9AB2ACD2A4440D92083479FD9AB227559C2A4A813338F3FDB6DCC5B5CF1D038DE19DD115DC561BA75C8DA3D2416F5070AF81C5E1F855613556CD41FA39B35C5BB30B78859D564B1C88F934BF7FFCCF63B2037BD4185A31998BEDF18B49CCC523CCCED8BAF5478E77F299B2C5DD3E7C46AFE4556D2DB14B699F9585E4ECAC76095E43D3CCE21CDA07C500F07C848E5B5EDB8E2661188BD9A0A1BD058F5B6A09BC2BFF3A246C97D05AC26CA5336E31408FAA05C0F8C87A7ED45A9FED508D6942BBC819AA2F1BD3B89F404B6F8323AB930F27AFE575B49B20DBB7FEC3CE056C6A24E2A37F61B21D9149E30AAAA3410E984C5EA68E4</KeySignature> 
+
+</CONTACTLESSCONFIG>
