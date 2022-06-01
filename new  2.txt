@@ -1,0 +1,2 @@
+ftp://ftp.grgbanking.com/Software/SP/20220325/,    just unzip and install, select ATM model then next, next.... no need change anything
+ftp://ftp.grgbanking.com/Software/YDC/20220601/,   you can contact us when you install and config
